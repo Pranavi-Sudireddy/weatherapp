@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week3</title>
+</head>
+<body bgcolor="yellow" >
+    <div align="center">
+    <h1  style="color:red;">WEATHER FORECAST</h1>
+    Enter city name:<input type="text" id="abc" ><br><br>
+    <input type="button" value="get weather" onclick="weather()" ><br><br>
+    max temp:<p id="maxtemp"></p>
+    min temp:<p id="mintemp"></p>
+    country:<p id="country"></p>
+</div>
+<div>
+    <canvas id="myChart"></canvas>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+   
+    // wdata.then((result)=>{
+    //     result.json().then((data)=>{
+    //         console.log(data.main);
+    //     })
+    // })
+    
+function weather(){
+    var aaaa=document.getElementById("abc").value;
+    console.log(aaaa);
+    var wdata=fetch("https://api.openweathermap.org/data/2.5/forecast?q="+aaaa+"&appid=e2d74f4d26b97ad02a7ffa5a07234822&units=metric");
+    wdata.then((result)=>{
+        result.json().then((data)=>{
+    let a=data.list;
+   // let a=[]
+  let tempArray=[]
+  let  DateArray=[]
+  let x=[]
+   console.log(data.list);
+   j=0;
+    for(var i=0;i<a.length;i=i+8){
+
+        tempArray[j]=a[i].main.temp;
+        DateArray=a[i].dt_txt.split(' ');
+        console.log(tempArray);
+     //console.log(DateArray[0]);
+        x[j]=DateArray[0];
+        j++;
+       
+        console.log(x);
+    }
+    
+    document.getElementById("maxtemp").innerHTML=Math.max(...tempArray)
+    document.getElementById("mintemp").innerHTML=Math.min(...tempArray)
+    document.getElementById("country").innerHTML=data.city.country
+    console.log(data.city.country);
+    plot(tempArray,x);
+})
+    })
+}
+    function plot(a,b){
+    const ctx = document.getElementById('myChart');
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels:b,
+        datasets: [{
+          label: '# weather',
+          data: a,
+          borderWidth: 1
+        }]
+      },
+     
+    });
+}
+  </script>
+</body>
+</html>
